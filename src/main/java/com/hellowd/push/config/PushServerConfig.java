@@ -35,7 +35,7 @@ public class PushServerConfig {
     private int httpPort;
 
     @Value("${zookeeper.hostPort}")
-    private int zookeeperHostPort;
+    private String zookeeperHostPort;
 
     @Value("${zookeeper.sessionTimeout}")
     private int zookeeperSessionTimeout;
@@ -61,7 +61,7 @@ public class PushServerConfig {
     }
 
     @Bean(name="zookeeperHostPort")
-    public int getZookeeperHostPort(){
+    public String getZookeeperHostPort(){
         return zookeeperHostPort;
     }
 

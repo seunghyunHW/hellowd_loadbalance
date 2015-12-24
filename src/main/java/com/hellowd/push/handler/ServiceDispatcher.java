@@ -34,14 +34,16 @@ public class ServiceDispatcher {
         String beanName = null;
 
         if(serviceUri == null || !httpMethod.equals("GET")){
-            beanName = "NotFound";
+            beanName = "BadRequest";
         }else{
             if(serviceUri.startsWith("/lookup")){
                 beanName = "Lookup";
             }else if(serviceUri.startsWith("/manager/status")){
-                beanName = "NotFound";//"Status";
+                beanName = "ServerMonitoring";//"Status";
             }else if(serviceUri.startsWith("/manager/healthcheck")){
-                beanName = "NotFound";//"HealthCheck";
+                beanName = "Healthcheck";//"HealthCheck";
+            }else{
+                beanName = "NotFoundRequest";
             }
         }
 
@@ -50,7 +52,7 @@ public class ServiceDispatcher {
             restApiRequest = (RestApiRequest)springContext.getBean(beanName,requestMap);
         }catch (Exception e){
             logger.debug(e.toString());
-            restApiRequest = (RestApiRequest)springContext.getBean("NotFound",requestMap);
+            restApiRequest = (RestApiRequest)springContext.getBean("BadRequest",requestMap);
         }
 
         return restApiRequest;

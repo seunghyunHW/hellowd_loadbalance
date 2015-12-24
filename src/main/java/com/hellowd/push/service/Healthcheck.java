@@ -11,15 +11,15 @@ import java.util.Map;
 /**
  * Created by Helloworld
  * User : USER
- * Date : 2015-12-23
- * Time : 오후 6:38
+ * Date : 2015-12-24
+ * Time : 오후 2:53
  * To change this template use File | Settings | File and Code Templates.
  */
-@Service("NotFound")
+@Service("Healthcheck")
 @Scope("prototype")
-public class NotFound extends RestApiRequestTemplate {
+public class Healthcheck extends RestApiRequestTemplate {
 
-    public NotFound(Map<String,String> reqData){
+    public Healthcheck(Map<String,String> reqData){
         super(reqData);
     }
 
@@ -29,6 +29,6 @@ public class NotFound extends RestApiRequestTemplate {
 
     @Override
     public void service() throws ServiceException {
-        this.apiResult.addProperty("resultCode", "404");
+        this.apiResult.addProperty("resultCode", "200");
     }
 }

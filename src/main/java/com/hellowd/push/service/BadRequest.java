@@ -11,15 +11,15 @@ import java.util.Map;
 /**
  * Created by Helloworld
  * User : USER
- * Date : 2015-12-23
- * Time : 오후 6:52
+ * Date : 2015-12-24
+ * Time : 오후 2:55
  * To change this template use File | Settings | File and Code Templates.
  */
-@Service("Lookup")
+@Service("BadRequest")
 @Scope("prototype")
-public class Lookup extends RestApiRequestTemplate {
+public class BadRequest extends RestApiRequestTemplate {
 
-    public Lookup(Map<String,String> reqData){
+    public BadRequest(Map<String,String> reqData){
         super(reqData);
     }
 
@@ -29,9 +29,7 @@ public class Lookup extends RestApiRequestTemplate {
 
     @Override
     public void service() throws ServiceException {
-
-        //그 다음 노드 별로 분기를 타서 해당 상태 점검 한 뒤에 결과 값을 뿌려줌 아래와 같이 말이지..
-        this.apiResult.addProperty("status", true);
-        this.apiResult.addProperty("data","14.63.163.191:8222");
+        this.apiResult.addProperty("resultCode", "400");
+        this.apiResult.addProperty("resultMessage", "잘못된 요청입니다.");
     }
 }

@@ -1,5 +1,6 @@
 package com.hellowd.push;
 
+import com.hellowd.monitor.ServerMonitor;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -10,6 +11,8 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -28,6 +31,8 @@ import java.security.cert.CertificateException;
 
 @Component
 public class PushServer {
+
+    static Logger logger = LoggerFactory.getLogger(PushServer.class);
 
     @Autowired
     @Qualifier("tcpSocketAddress")
@@ -52,13 +57,19 @@ public class PushServer {
 
     @Autowired
     @Qualifier("zookeeperHostPort")
-    private int zookeeperHostPort;
+    private String zookeeperHostPort;
 
     @Autowired
     @Qualifier("zookeeperSessionTimeout")
     private int zookeeperSessionTimeout;
 
+
+    private ServerMonitor serverMonitor;
+
     public void start() {
+        //이때 ServerMonitor가 시작을 하게 된답니다.
+        serverMonitor = new ServerMonitor();
+        logger.info(serverMonitor.toString());
         EventLoopGroup bossGroup = new NioEventLoopGroup(bossThreadCount);
         EventLoopGroup workerGroup = new NioEventLoopGroup(workerThreadCount);
 
@@ -67,7 +78,7 @@ public class PushServer {
             b.group(bossGroup,workerGroup).channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.DEBUG))
                     .childHandler(new PushServerInitializer());
-            b.bind(tcpPort).sync().channel().closeFuture().sync();
+            b.bind(httpPort).sync().channel().closeFuture().sync();
 
         }catch (InterruptedException e){
             e.printStackTrace();
@@ -75,6 +86,9 @@ public class PushServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
 
+    public ServerMonitor getServerMonitor() {
+        return serverMonitor;
     }
 }
